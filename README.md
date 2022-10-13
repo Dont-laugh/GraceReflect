@@ -1,5 +1,7 @@
 # GraceReflect
 
+![Logo](Logo.png)
+
 ## Introduction
 
 This is a C# library which uses Emit to accelerate reflection, implemented at Unity platform. Emit is a feature used to emit Microsoft intermediate language (MSIL) code on the fly at runtime. This library gets a huge performance boost with Emit, which improves performance by up to two orders of magnitude.
@@ -22,22 +24,41 @@ The first two APIs return a class which implemented interface `IOptimizedAccesso
 
 ## Example Code
 
+Suppose there is a class as following. In unity, it's defined in assembly Assembly-CSharp.
+
+```c#
+public class SampleOutterClass
+{
+    private string m_Field1;
+    public static void Method1(string arg0, int arg1)
+    {
+        Debug.Log("This is Method1 of SampleOutterClass");
+    }
+}
+```
+
+Now you can write code like this to get field/method through interfaces of class `GraceReflection`.
+
 ``` c#
 // Get a type you cannot write it directly.
 Type t = Type.GetType("DontLaugh.Test.SampleOutterClass,Assembly-CSharp");
 // Create a instance of the type.
 object target = Activator.CreateInstance(t);
+
 // Create a accessor.
-var accessor = GraceReflection.CreateFromField<string>(target,
-    target.GetField("m_Field1", BindingFlags.Instance | BindingFlags.NonPublic));
+var accessor = GraceReflection.CreateFromField<string>(target, target.GetField("m_Field1", BindingFlags.Instance | BindingFlags.NonPublic));
 // Get/Set value through the accessor.
 accessor.GetValue();
 accessor.SetValue("New Value");
 
 // Create a invoker of a static method.
-var invoker = GraceReflection.CreateFromMethod(null,
-    t.GetMethod("Method3", BindingFlags.Static | BindingFlags.Public));
+var invoker = GraceReflection.CreateFromMethod(null, t.GetMethod("Method1", BindingFlags.Static | BindingFlags.Public));
 // Call the method through the invoker.
 invoker.Invoke("First parameter", 233);
 ```
 
+## Performance
+
+If you want to see the exactly performance gap between native reflection and GraceReflect, open test scene named `TestScene` at `Test` folder. Change the test count number to see how huge the performance gap is!
+
+![TestScene](TestScene.png)
