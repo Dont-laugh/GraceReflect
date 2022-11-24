@@ -23,7 +23,7 @@ namespace DontLaugh
             );
 
             ILGenerator gen = method.GetILGenerator();
-            gen.Emit(OpCodes.Ldarg_0);
+            gen.Emit(_targetType.IsValueType ? OpCodes.Ldarga : OpCodes.Ldarg, 0);
             gen.Emit(OpCodes.Ldarg_1);
             gen.Emit(OpCodes.Ldarg_2);
             gen.Emit(OpCodes.Ldarg_3);

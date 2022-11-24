@@ -18,11 +18,7 @@ namespace DontLaugh
             var method = new DynamicMethod(methodName, _resultType, new[] { _targetType, typeof(TParam0) }, _targetType, true);
 
             ILGenerator gen = method.GetILGenerator();
-            gen.Emit(OpCodes.Ldarg_0);
-            if (_targetType.IsClass)
-            {
-                gen.Emit(OpCodes.Castclass, _targetType);
-            }
+            gen.Emit(_targetType.IsValueType ? OpCodes.Ldarga : OpCodes.Ldarg, 0);
             gen.Emit(OpCodes.Ldarg_1);
             gen.Emit(OpCodes.Callvirt, _methodInfo);
             gen.Emit(OpCodes.Ret);

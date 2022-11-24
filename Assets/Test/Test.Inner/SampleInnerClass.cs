@@ -7,7 +7,7 @@ namespace DontLaugh.Test
         First, Second, Third
     }
 
-    internal class SampleInnerClass
+    internal struct SampleInnerClass
     {
         private string m_Field1;
         public Vector3 m_Field2;

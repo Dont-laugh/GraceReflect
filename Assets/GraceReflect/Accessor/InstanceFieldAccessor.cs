@@ -36,7 +36,6 @@ namespace DontLaugh
                 }
             }
 
-            
             _instance = instance;
             _fieldInfo = fieldInfo;
             _instanceType = typeof(TInstance);
@@ -57,7 +56,7 @@ namespace DontLaugh
             var getter = new DynamicMethod(getterName, _fieldType, new[] { _instanceType }, _instanceType, true);
             ILGenerator gen = getter.GetILGenerator();
 
-            gen.Emit(OpCodes.Ldarg_0);
+            gen.Emit(_instanceType.IsValueType ? OpCodes.Ldarga : OpCodes.Ldarg, 0);
             gen.Emit(OpCodes.Ldfld, _fieldInfo);
             gen.Emit(OpCodes.Ret);
 
@@ -68,7 +67,7 @@ namespace DontLaugh
             var setter = new DynamicMethod(setterName, typeof(void), new[] { _instanceType, _fieldType }, _instanceType, true);
             gen = setter.GetILGenerator();
 
-            gen.Emit(OpCodes.Ldarg_0);
+            gen.Emit(_instanceType.IsValueType ? OpCodes.Ldarga : OpCodes.Ldarg, 0);
             gen.Emit(OpCodes.Ldarg_1);
             gen.Emit(OpCodes.Stfld, _fieldInfo);
             gen.Emit(OpCodes.Ret);
